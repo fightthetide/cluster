@@ -1,0 +1,24 @@
+name: IaC Regression
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: regression tests
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v2
+      
+      - name: Terraform validate
+        run: |
+          cd ./terraform
+          terraform init && terraform validate
