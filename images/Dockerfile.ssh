@@ -8,6 +8,7 @@ RUN echo "PermitRootLogin no" >> /etc/ssh/sshd_config
 ENV USER_NAME=infra
 ENV USER_ID=1000
 RUN useradd -u $USER_ID -m $USER_NAME
+RUN echo "$USER_NAME ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 RUN mkdir /home/$USER_NAME/.ssh
 COPY ./images/id_rsa.pub /home/$USER_NAME/.ssh/authorized_keys
 
