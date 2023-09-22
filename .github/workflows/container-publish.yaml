@@ -34,7 +34,9 @@ jobs:
 
     - name: Build and push Docker images
       run: |
+        echo "DOCKERFILES: $DOCKERFILES"
         for DOCKERFILE in $DOCKERFILES; do
+          echo "DOCKERFILE: $DOCKERFILE"
           # Extract the image name from the Dockerfile path
           IMAGE_NAME=$(basename "${DOCKERFILE}" | sed 's/^Dockerfile\.//')
 
@@ -50,5 +52,5 @@ jobs:
           docker push "${DOCKERHUB_USER}/${IMAGE_NAME}"
         done
       env:
-        DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
-        DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+        DOCKERHUB_USER: ${{ secrets.DH_USER}}
+        DOCKERHUB_PASSWORD: ${{ secrets.DH_PAT }}
