@@ -9,7 +9,7 @@ ENV USER_NAME=infra
 ENV USER_ID=1000
 RUN useradd -u $USER_ID -m $USER_NAME
 RUN mkdir /home/$USER_NAME/.ssh
-COPY id_rsa.pub /home/$USER_NAME/.ssh/authorized_keys
+COPY ./images/id_rsa.pub /home/$USER_NAME/.ssh/authorized_keys
 
 USER $USER_NAME
 WORKDIR /home/$USER_NAME
