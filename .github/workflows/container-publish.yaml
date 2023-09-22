@@ -26,15 +26,11 @@ jobs:
     - name: Set up QEMU
       run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
-    - name: List Dockerfiles
-      run: |
-        # List Dockerfiles matching the pattern
-        DOCKERFILES=$(find ./images -type f -name "Dockerfile.*")
-        echo "$DOCKERFILES"  # For debugging purposes
-
     - name: Build and push Docker images
       run: |
+        DOCKERFILES=$(find . -type f -name "Dockerfile.*")
         echo "DOCKERFILES: $DOCKERFILES"
+
         for DOCKERFILE in $DOCKERFILES; do
           echo "DOCKERFILE: $DOCKERFILE"
           # Extract the image name from the Dockerfile path
