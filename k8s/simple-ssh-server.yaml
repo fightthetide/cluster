@@ -5,7 +5,7 @@ metadata:
 spec:
   containers:
   - name: ssh-container
-    image: ubuntu:latest
+    image: iamclyde/ssh:latest
     command: ["/usr/sbin/sshd", "-D"]
     ports:
     - containerPort: 22 # Expose port 22 for SSH

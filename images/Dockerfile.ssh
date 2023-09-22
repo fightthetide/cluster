@@ -2,8 +2,18 @@ FROM ubuntu:latest
 
 RUN apt-get update && apt-get install -y openssh-server && \
     mkdir -p /var/run/sshd
+RUN echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+RUN echo "PermitRootLogin no" >> /etc/ssh/sshd_config
 
-RUN echo 'root:password' | chpasswd
+ENV USER_NAME=infra
+ENV USER_ID=1000
+RUN useradd -u $USER_ID -m $USER_NAME
+RUN mkdir /home/$USER_NAME/.ssh
+COPY id_rsa.pub /home/$USER_NAME/.ssh/authorized_keys
+
+USER $USER_NAME
+WORKDIR /home/$USER_NAME
+
 EXPOSE 22
 
 CMD ["/usr/sbin/sshd", "-D"]
