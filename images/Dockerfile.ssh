@@ -37,7 +37,6 @@ RUN chown root:root /run/sshd
 
 # Copy your public SSH key to the container (replace 'your_public_key.pub' with your actual key file)
 COPY ./images/id_ed25519.pub /home/sshuser/.ssh/id_ed25519.pub
-COPY ./images/.ssh/id_ed25519 /home/sshuser/.ssh/id_ed25519
 RUN cat /home/sshuser/.ssh/id_ed25519.pub >> /home/sshuser/.ssh/authorized_keys
 RUN chown -R sshuser:sshuser /home/sshuser/.ssh && chmod 600 /home/sshuser/.ssh/authorized_keys
 
