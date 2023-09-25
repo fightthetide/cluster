@@ -1,0 +1,11 @@
+Port 22  # Specify the SSH port (optional but commonly used)
+Protocol 2  # Use SSH protocol version 2
+
+PermitRootLogin no  # Disable root login (recommended for security)
+
+PasswordAuthentication no  # Disable password authentication
+ChallengeResponseAuthentication no  # Disable challenge-response authentication
+
+UsePAM no  # Disable PAM authentication
+PubkeyAuthentication yes  # Enable public key authentication
+PubkeyAcceptedKeyTypes ssh-ed25519,ssh-rsa

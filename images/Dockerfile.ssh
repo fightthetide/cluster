@@ -1,20 +1,48 @@
+# FROM ubuntu:latest
+
+# RUN apt-get update && apt-get install -y openssh-server && \
+#     mkdir -p /var/run/sshd
+# RUN echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+# RUN echo "PermitRootLogin no" >> /etc/ssh/sshd_config
+
+# ENV USER_NAME=infra
+# ENV USER_ID=1000
+# RUN useradd -u $USER_ID -m $USER_NAME
+# RUN echo "$USER_NAME ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
+# RUN mkdir /home/$USER_NAME/.ssh
+# COPY ./images/id_rsa.pub /home/$USER_NAME/.ssh/authorized_keys
+
+# USER $USER_NAME
+# WORKDIR /home/$USER_NAME
+
+# EXPOSE 22
+
+# CMD ["/usr/sbin/sshd", "-D"]
+
+
+
+
+# Use an official base image (e.g., Ubuntu)
 FROM ubuntu:latest
 
-RUN apt-get update && apt-get install -y openssh-server && \
-    mkdir -p /var/run/sshd
-RUN echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
-RUN echo "PermitRootLogin no" >> /etc/ssh/sshd_config
+# Install SSH server and create a user
+RUN apt-get update && apt-get install -y openssh-server
+COPY ./images/sshd_config /etc/ssh/sshd_config
+RUN useradd -ms /bin/bash sshuser
 
-ENV USER_NAME=infra
-ENV USER_ID=1000
-RUN useradd -u $USER_ID -m $USER_NAME
-RUN echo "$USER_NAME ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
-RUN mkdir /home/$USER_NAME/.ssh
-COPY ./images/id_rsa.pub /home/$USER_NAME/.ssh/authorized_keys
+# Create SSH directory for the user and set permissions
+RUN mkdir -p /home/sshuser/.ssh && chmod 700 /home/sshuser/.ssh
+RUN mkdir /run/sshd
+RUN chown root:root /run/sshd
 
-USER $USER_NAME
-WORKDIR /home/$USER_NAME
+# Copy your public SSH key to the container (replace 'your_public_key.pub' with your actual key file)
+COPY ./images/id_ed25519.pub /home/sshuser/.ssh/id_ed25519.pub
+COPY ./images/.ssh/id_ed25519 /home/sshuser/.ssh/id_ed25519
+RUN cat /home/sshuser/.ssh/id_ed25519.pub >> /home/sshuser/.ssh/authorized_keys
+RUN chown -R sshuser:sshuser /home/sshuser/.ssh && chmod 600 /home/sshuser/.ssh/authorized_keys
 
+# Expose SSH port
 EXPOSE 22
 
+# Start the SSH server
 CMD ["/usr/sbin/sshd", "-D"]
